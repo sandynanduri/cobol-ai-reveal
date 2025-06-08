@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -201,7 +200,7 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({
                       >
                         <Download className="h-4 w-4" />
                       </Button>
-                    </TotooltipTrigger>
+                    </TooltipTrigger>
                     <TooltipContent>Download pseudo code</TooltipContent>
                   </Tooltip>
                 </div>
