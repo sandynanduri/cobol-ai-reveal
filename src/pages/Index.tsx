@@ -1,9 +1,11 @@
+
 import React, { useState } from 'react';
 import FileUploadZone from '@/components/FileUploadZone';
 import AnalysisResults from '@/components/AnalysisResults';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { FileCode, Upload, Zap, Sparkles } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { FileCode, Upload, Zap, Sparkles, HelpCircle } from 'lucide-react';
 
 export interface UploadedFile {
   file: File;
@@ -184,7 +186,7 @@ END_PROGRAM`;
             <div className="p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 shadow-2xl shadow-purple-500/25">
               <FileCode className="h-8 w-8 text-white" />
             </div>
-            <div>
+            <div className="flex-1">
               <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
                 COBOL Analyzer
               </h1>
@@ -192,52 +194,100 @@ END_PROGRAM`;
                 Transform legacy COBOL code into modern business logic and pseudo code
               </p>
             </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-gray-300 hover:text-white hover:bg-white/10">
+                  <HelpCircle className="h-6 w-6" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="max-w-sm p-4 bg-white/10 backdrop-blur-xl border border-white/20 text-white">
+                <div className="space-y-2">
+                  <h4 className="font-semibold">How to use COBOL Analyzer:</h4>
+                  <ol className="text-sm space-y-1 list-decimal list-inside">
+                    <li>Upload COBOL files (.cbl, .cob, .cobol)</li>
+                    <li>Click "Analyze Files" to start processing</li>
+                    <li>View extracted business logic and pseudo code</li>
+                  </ol>
+                  <p className="text-xs text-gray-300 mt-2">
+                    Supported formats: .cbl, .cob, .cobol
+                  </p>
+                </div>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </div>
 
-      <div className="relative container mx-auto px-6 py-12">
-        <div className="grid lg:grid-cols-2 gap-12">
+      <div className="relative container mx-auto px-6 py-8">
+        <div className="grid lg:grid-cols-2 gap-8">
           {/* Upload Section */}
-          <div className="space-y-8">
-            <Card className="p-8 border-0 shadow-2xl bg-white/10 backdrop-blur-xl border border-white/20">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg">
-                  <Upload className="h-6 w-6 text-white" />
-                </div>
-                <h2 className="text-2xl font-bold text-white">Upload COBOL Files</h2>
+          <div className="space-y-6">
+            {/* Section Header */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg">
+                <Upload className="h-5 w-5 text-white" />
               </div>
-              
+              <h2 className="text-xl font-bold text-white">Upload Files</h2>
+            </div>
+
+            <Card className="p-6 border-0 shadow-2xl bg-white/10 backdrop-blur-xl border border-white/20">
               <FileUploadZone 
                 onFilesAdded={handleFilesAdded}
                 uploadedFiles={uploadedFiles}
                 onRemoveFile={removeFile}
               />
               
-              <div className="flex gap-4 mt-8">
-                <Button 
-                  onClick={analyzeFiles}
-                  disabled={uploadedFiles.length === 0 || isAnalyzing}
-                  className="flex-1 h-12 text-lg font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-xl shadow-purple-500/25 hover:shadow-2xl transition-all duration-300 border-0"
-                >
-                  <Sparkles className="h-5 w-5 mr-2" />
-                  {isAnalyzing ? 'Analyzing with AI...' : 'Analyze Files'}
-                </Button>
+              <div className="flex gap-4 mt-6">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex-1">
+                      <Button 
+                        onClick={analyzeFiles}
+                        disabled={uploadedFiles.length === 0 || isAnalyzing}
+                        className="w-full h-12 text-lg font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-xl shadow-purple-500/25 hover:shadow-2xl transition-all duration-300 border-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <Sparkles className="h-5 w-5 mr-2" />
+                        {isAnalyzing ? 'Analyzing with AI...' : 'Analyze Files'}
+                      </Button>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    {uploadedFiles.length === 0 
+                      ? "Upload COBOL files first" 
+                      : "Start analyzing COBOL files"
+                    }
+                  </TooltipContent>
+                </Tooltip>
                 
-                <Button 
-                  variant="outline" 
-                  onClick={clearAll}
-                  disabled={uploadedFiles.length === 0}
-                  className="h-12 px-8 border-2 border-white/20 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
-                >
-                  Clear All
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      onClick={clearAll}
+                      disabled={uploadedFiles.length === 0}
+                      className="h-12 px-6 border-2 border-white/20 bg-white/10 text-white hover:bg-white/20 hover:border-purple-300 backdrop-blur-sm transition-all duration-300 disabled:opacity-50"
+                    >
+                      Clear All
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    Remove all uploaded files
+                  </TooltipContent>
+                </Tooltip>
               </div>
             </Card>
           </div>
 
           {/* Results Section */}
-          <div className="space-y-8">
+          <div className="space-y-6">
+            {/* Section Header */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg">
+                <Zap className="h-5 w-5 text-white" />
+              </div>
+              <h2 className="text-xl font-bold text-white">Analysis Results</h2>
+            </div>
+
             <AnalysisResults 
               results={analysisResults}
               isAnalyzing={isAnalyzing}
