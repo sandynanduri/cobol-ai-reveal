@@ -159,25 +159,36 @@ END_PROGRAM`;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      {/* Animated background elements */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+      {/* Animated background elements inspired by the reference image */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-emerald-400/20 to-blue-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        {/* Main geometric pattern overlay */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-purple-500/20 via-blue-600/20 to-indigo-700/20"></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-purple-400/30 to-blue-500/30 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-blue-500/20 to-indigo-600/20 rounded-full blur-2xl animate-pulse delay-1000"></div>
+        </div>
+        
+        {/* Subtle mesh pattern */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: `radial-gradient(circle at 25% 25%, #8b5cf6 2px, transparent 2px),
+                           radial-gradient(circle at 75% 75%, #3b82f6 1px, transparent 1px)`,
+          backgroundSize: '50px 50px'
+        }}></div>
       </div>
 
       {/* Header */}
-      <div className="relative border-b border-border/50 bg-white/70 backdrop-blur-sm">
+      <div className="relative border-b border-white/10 bg-black/20 backdrop-blur-xl">
         <div className="container mx-auto px-6 py-8">
           <div className="flex items-center gap-4">
-            <div className="p-3 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg">
+            <div className="p-3 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-600 shadow-2xl shadow-purple-500/25">
               <FileCode className="h-8 w-8 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
                 COBOL Analyzer
               </h1>
-              <p className="text-lg text-muted-foreground mt-1">
+              <p className="text-lg text-gray-300 mt-1">
                 Transform legacy COBOL code into modern business logic and pseudo code
               </p>
             </div>
@@ -189,12 +200,12 @@ END_PROGRAM`;
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Upload Section */}
           <div className="space-y-8">
-            <Card className="p-8 border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+            <Card className="p-8 border-0 shadow-2xl bg-white/10 backdrop-blur-xl border border-white/20">
               <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600">
+                <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg">
                   <Upload className="h-6 w-6 text-white" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900">Upload COBOL Files</h2>
+                <h2 className="text-2xl font-bold text-white">Upload COBOL Files</h2>
               </div>
               
               <FileUploadZone 
@@ -207,7 +218,7 @@ END_PROGRAM`;
                 <Button 
                   onClick={analyzeFiles}
                   disabled={uploadedFiles.length === 0 || isAnalyzing}
-                  className="flex-1 h-12 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300"
+                  className="flex-1 h-12 text-lg font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-xl shadow-purple-500/25 hover:shadow-2xl transition-all duration-300 border-0"
                 >
                   <Sparkles className="h-5 w-5 mr-2" />
                   {isAnalyzing ? 'Analyzing with AI...' : 'Analyze Files'}
@@ -217,7 +228,7 @@ END_PROGRAM`;
                   variant="outline" 
                   onClick={clearAll}
                   disabled={uploadedFiles.length === 0}
-                  className="h-12 px-8 border-2 hover:bg-gray-50"
+                  className="h-12 px-8 border-2 border-white/20 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
                 >
                   Clear All
                 </Button>
