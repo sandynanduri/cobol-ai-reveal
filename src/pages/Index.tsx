@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import FileUploadZone from '@/components/FileUploadZone';
 import AnalysisResults from '@/components/AnalysisResults';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { FileCode, Upload, Zap } from 'lucide-react';
+import { FileCode, Upload, Zap, Sparkles } from 'lucide-react';
 
 export interface UploadedFile {
   file: File;
@@ -121,7 +120,7 @@ BEGIN
     END_PROCEDURE
 
     MAIN
-        READ_customer_files()
+        read_customer_files()
         WHILE NOT end_of_file
             CALL validate_customer_data(customer_record)
             CALL process_transaction(transaction_type, amount)
@@ -160,30 +159,42 @@ END_PROGRAM`;
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-emerald-400/20 to-blue-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
+
       {/* Header */}
-      <div className="border-b border-border bg-card">
-        <div className="container mx-auto px-6 py-6">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10">
-              <FileCode className="h-6 w-6 text-primary" />
+      <div className="relative border-b border-border/50 bg-white/70 backdrop-blur-sm">
+        <div className="container mx-auto px-6 py-8">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 shadow-lg">
+              <FileCode className="h-8 w-8 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-foreground">COBOL Analyzer</h1>
-              <p className="text-muted-foreground">Upload COBOL files to extract business logic and generate pseudo code</p>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                COBOL Analyzer
+              </h1>
+              <p className="text-lg text-muted-foreground mt-1">
+                Transform legacy COBOL code into modern business logic and pseudo code
+              </p>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="container mx-auto px-6 py-8">
-        <div className="grid lg:grid-cols-2 gap-8">
+      <div className="relative container mx-auto px-6 py-12">
+        <div className="grid lg:grid-cols-2 gap-12">
           {/* Upload Section */}
-          <div className="space-y-6">
-            <Card className="p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Upload className="h-5 w-5 text-primary" />
-                <h2 className="text-lg font-semibold">Upload COBOL Files</h2>
+          <div className="space-y-8">
+            <Card className="p-8 border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-2 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600">
+                  <Upload className="h-6 w-6 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-900">Upload COBOL Files</h2>
               </div>
               
               <FileUploadZone 
@@ -192,20 +203,21 @@ END_PROGRAM`;
                 onRemoveFile={removeFile}
               />
               
-              <div className="flex gap-3 mt-6">
+              <div className="flex gap-4 mt-8">
                 <Button 
                   onClick={analyzeFiles}
                   disabled={uploadedFiles.length === 0 || isAnalyzing}
-                  className="flex-1"
+                  className="flex-1 h-12 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  <Zap className="h-4 w-4 mr-2" />
-                  {isAnalyzing ? 'Analyzing...' : 'Analyze Files'}
+                  <Sparkles className="h-5 w-5 mr-2" />
+                  {isAnalyzing ? 'Analyzing with AI...' : 'Analyze Files'}
                 </Button>
                 
                 <Button 
                   variant="outline" 
                   onClick={clearAll}
                   disabled={uploadedFiles.length === 0}
+                  className="h-12 px-8 border-2 hover:bg-gray-50"
                 >
                   Clear All
                 </Button>
@@ -214,7 +226,7 @@ END_PROGRAM`;
           </div>
 
           {/* Results Section */}
-          <div className="space-y-6">
+          <div className="space-y-8">
             <AnalysisResults 
               results={analysisResults}
               isAnalyzing={isAnalyzing}
