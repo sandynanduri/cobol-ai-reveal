@@ -291,6 +291,7 @@ END_PROGRAM`;
             <AnalysisResults 
               results={analysisResults}
               isAnalyzing={isAnalyzing}
+              uploadedFiles={uploadedFiles}
             />
           </div>
         </div>

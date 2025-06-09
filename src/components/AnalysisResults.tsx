@@ -1,24 +1,30 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { FileText, Code, Loader2, FileCode, Sparkles, Brain, Copy, Download, CheckCircle } from 'lucide-react';
+import { FileText, Code, Loader2, FileCode, Sparkles, Brain, Copy, Download, CheckCircle, Send } from 'lucide-react';
 import { AnalysisResult } from '@/pages/Index';
 import { useToast } from '@/hooks/use-toast';
 
 interface AnalysisResultsProps {
   results: AnalysisResult[];
   isAnalyzing: boolean;
+  uploadedFiles?: any[];
 }
 
 const AnalysisResults: React.FC<AnalysisResultsProps> = ({
   results,
-  isAnalyzing
+  isAnalyzing,
+  uploadedFiles = []
 }) => {
   const { toast } = useToast();
+  const [chatMessage, setChatMessage] = useState('');
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
 
   const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text);
@@ -38,6 +44,39 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const handleSendMessage = async () => {
+    if (!chatMessage.trim() || uploadedFiles.length === 0) return;
+    
+    setIsSendingMessage(true);
+    
+    try {
+      // Mock API call to LLM - replace with actual implementation
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast({
+        title: "Message sent",
+        description: "Your message has been sent to the AI assistant.",
+      });
+      
+      setChatMessage('');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSendingMessage(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
   };
 
   if (isAnalyzing) {
@@ -79,11 +118,62 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({
           <p className="text-lg text-gray-300 mb-4">
             Once files are analyzed, business logic and pseudo code will appear here.
           </p>
-          <div className="text-sm text-gray-400 space-y-1">
+          <div className="text-sm text-gray-400 space-y-1 mb-8">
             <p>• Upload COBOL files using the dropzone</p>
             <p>• Click "Analyze Files" to start processing</p>
             <p>• View results in organized tabs</p>
           </div>
+
+          {uploadedFiles.length > 0 && (
+            <div className="space-y-4">
+              <div className="border-t border-white/10 pt-6">
+                <h4 className="text-lg font-semibold text-white mb-4">Or Chat with AI Assistant</h4>
+                <p className="text-sm text-gray-300 mb-4">
+                  Ask questions about your uploaded COBOL files or request specific analysis
+                </p>
+                
+                <div className="relative">
+                  <Textarea
+                    value={chatMessage}
+                    onChange={(e) => setChatMessage(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    placeholder="Ask me anything about your COBOL files... (Press Enter to send, Shift+Enter for new line)"
+                    className="min-h-[100px] bg-black/30 border-white/20 text-white placeholder:text-gray-400 resize-none pr-12"
+                    disabled={isSendingMessage}
+                  />
+                  
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        onClick={handleSendMessage}
+                        disabled={!chatMessage.trim() || uploadedFiles.length === 0 || isSendingMessage}
+                        size="sm"
+                        className="absolute bottom-3 right-3 h-8 w-8 p-0 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-lg"
+                      >
+                        {isSendingMessage ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Send className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {uploadedFiles.length === 0 
+                        ? "Upload files first" 
+                        : !chatMessage.trim() 
+                        ? "Type a message" 
+                        : "Send message (Enter)"
+                      }
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+                
+                <div className="text-xs text-gray-400 mt-2 text-left">
+                  Example: "What are the main business functions in these files?" or "Generate pseudo code for the customer validation logic"
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </Card>
     );
