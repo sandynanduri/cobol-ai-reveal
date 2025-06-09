@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -6,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { FileText, Code, Loader2, Brain, Copy, Download, CheckCircle, Send } from 'lucide-react';
+import { FileText, Code, Loader2, Brain, Copy, Download, CheckCircle, Send, FileCode } from 'lucide-react';
 import { AnalysisResult } from '@/pages/Index';
 import { useToast } from '@/hooks/use-toast';
 
@@ -106,15 +107,43 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({
 
   if (results.length === 0) {
     return (
-      <Card className="p-8 border-0 shadow-2xl bg-white/10 backdrop-blur-xl border border-white/20">
-        <div className="space-y-4">
+      <Card className="border-0 shadow-2xl bg-white/10 backdrop-blur-xl border border-white/20 overflow-hidden">
+        {/* Chat Header */}
+        <div className="p-6 border-b border-white/10 bg-gradient-to-r from-purple-900/50 to-indigo-900/50">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg">
+              <FileCode className="h-5 w-5 text-white" />
+            </div>
+            <h3 className="text-lg font-bold text-white">Ready for Analysis</h3>
+          </div>
+        </div>
+
+        {/* Chat Content Area */}
+        <div className="p-6">
+          <div className="text-center mb-6">
+            <div className="relative mb-4">
+              <div className="p-3 rounded-full bg-white/10 w-fit mx-auto">
+                <FileCode className="h-8 w-8 text-gray-300" />
+              </div>
+            </div>
+            <p className="text-gray-300 leading-relaxed mb-4">
+              Once files are analyzed, business logic and pseudo code will appear here.
+            </p>
+            <div className="text-sm text-gray-400 space-y-1">
+              <p>• Upload COBOL files using the dropzone</p>
+              <p>• Click "Analyze Files" to start processing</p>
+              <p>• View results in organized tabs</p>
+            </div>
+          </div>
+
+          {/* Chat Input */}
           <div className="relative">
             <Textarea
               value={chatMessage}
               onChange={(e) => setChatMessage(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ask me anything about your COBOL files... (Press Enter to send, Shift+Enter for new line)"
-              className="min-h-[120px] bg-black/30 border-white/20 text-white placeholder:text-gray-400 resize-none pr-12"
+              className="min-h-[100px] bg-black/30 border-white/20 text-white placeholder:text-gray-400 resize-none pr-12"
               disabled={isSendingMessage}
             />
             
@@ -144,7 +173,7 @@ const AnalysisResults: React.FC<AnalysisResultsProps> = ({
             </Tooltip>
           </div>
           
-          <div className="text-xs text-gray-400">
+          <div className="text-xs text-gray-400 mt-2">
             Example: "What are the main business functions in these files?" or "Generate pseudo code for the customer validation logic"
           </div>
         </div>
